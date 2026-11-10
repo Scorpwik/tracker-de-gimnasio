@@ -1,5 +1,5 @@
 const fs = require('fs');
-const file = 'c:\\Users\\Administrador\\Documents\\PaginaGimnasio\\PaginaGimnasio\\src\\App.jsx';
+const file = 'c:\\Users\\Administrador\\Documents\\tracker-de-gimnasio\\tracker-de-gimnasio\\src\\App.jsx';
 let text = fs.readFileSync(file, 'utf8');
 const replacements = [
   ['Â·', '·'],
