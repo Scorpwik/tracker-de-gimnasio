@@ -1,8 +1,48 @@
-# Gym Tracker
+# Tracker de gimnasio
 
-Aplicación de seguimiento de entrenamiento mobile-first con interfaz liquid glass, preparada para funcionar como PWA y para conectarse a Firebase.
+Gym Tracker es una aplicación web para anotar tus entrenamientos, armar tus rutinas y seguir tu progreso físico. Está hecha para usarla en el celular, en el gimnasio: pantalla oscura, navegación inferior y los registros guardados en el propio dispositivo cuando la señal es mala.
 
-## Desarrollo local
+**Demostración:** [https://scorpwik.github.io/tracker-de-gimnasio/](https://scorpwik.github.io/tracker-de-gimnasio/)
+
+## Qué hace
+
+Al abrirla entras al entrenamiento del día. Marcas cada serie con peso, repeticiones y si la lograste, y la app guarda la sesión. Las rutinas, los entrenos, el peso, las medidas y las fotos quedan en el `localStorage` de este navegador.
+
+Si Firebase responde, entra con una sesión anónima y copia esos datos a Cloud Firestore. Desde Perfil puedes crear una cuenta con correo y contraseña para verlos en otra computadora o en otro celular. Si la nube no está disponible, sigues entrenando con lo que ya está guardado en el dispositivo.
+
+La app se mueve por pestañas (Hoy, Rutinas, Métricas, Fotos y Perfil). El enrutador es un `HashRouter`, así que GitHub Pages puede servirla en un subdirectorio sin reescribir rutas.
+
+## Funciones
+
+- **Hoy.** Rutina del día (o la que elijas), cronómetro de la sesión, series con peso y repeticiones, estados logrado o parcial, récord personal, lo que hiciste la vez anterior y temporizador de descanso con vibración. Puedes sumar o quitar series y marcarlas como calentamiento, normal o al fallo.
+- **Rutinas.** Crear, editar y eliminar sesiones por día de la semana, con color, calentamiento y orden de ejercicios. La búsqueda usa la biblioteca; si el ejercicio no existe, lo creas ahí mismo. Cada ejercicio tiene series, repeticiones, peso y descanso. El plan inicial trae Push, Pull, Piernas, Upper, Lower y Core en casa.
+- **Guías.** En la biblioteca, cada ejercicio indica el músculo que trabaja y cómo ejecutarlo, y abre una búsqueda para ver un video.
+- **Métricas.** Volumen de la semana, entrenos de la semana, racha, gráfica de carga por ejercicio, calendario, historial para ver, editar o borrar una sesión, y peso corporal con grasa estimada y notas.
+- **Fotos.** Cámara o galería, varias fotos por fecha, etiquetas (frente, perfil, espalda u otro), compresión en el propio celular, comparación de dos fotos y medidas de hombros, pecho, brazos, antebrazos, cadera, piernas y pantorrillas.
+- **Perfil.** Color de acento, descanso por defecto, editor de la biblioteca (los cambios se aplican a las rutinas que usan ese ejercicio), exportación de rutinas y sesiones en JSON, borrado de los datos locales e inicio o cierre de sesión.
+- **Instalable.** Manifest y service worker para agregarla a la pantalla de inicio. La interfaz queda en caché; los registros viven en el navegador.
+
+## Tecnologías
+
+- React 19 y Vite 8
+- React Router 7 (`HashRouter`)
+- Firebase 12: Authentication, Cloud Firestore y Analytics
+- lucide-react para los íconos
+- browser-image-compression para reducir las fotos antes de guardarlas
+- Manifest y service worker (PWA)
+- GitHub Actions para publicar en GitHub Pages
+
+## Demostración
+
+La versión publicada está en:
+
+https://scorpwik.github.io/tracker-de-gimnasio/
+
+En `vite.config.js`, `base` es `/tracker-de-gimnasio/`. Así los archivos JavaScript y CSS se piden dentro de esa carpeta, que es la ruta del repositorio en GitHub Pages. El manifest, los íconos y el service worker usan rutas relativas (`./`), y el enrutador no depende del nombre de la carpeta.
+
+## Cómo ejecutarla en tu computadora
+
+Necesitas Node.js 20.
 
 ```bash
 npm install
@@ -10,32 +50,25 @@ cp .env.example .env
 npm run dev
 ```
 
-La aplicación funciona en modo demo sin credenciales: las rutinas, sesiones, métricas y fotos se guardan en `localStorage` del navegador. Esto permite probar el producto en un gimnasio incluso antes de crear el proyecto de Firebase.
+Abre [http://localhost:5000/tracker-de-gimnasio/](http://localhost:5000/tracker-de-gimnasio/). Si entras solo a `http://localhost:5000/`, Vite redirige a esa misma ruta.
 
-## Firebase
+Sin tocar el `.env`, la app usa la configuración pública de Firebase que ya está en el código y, en paralelo, guarda todo en este navegador. Para usar otro proyecto, completa las variables `VITE_FIREBASE_*` de `.env.example` (la API key va en `VITE_FIREBASE_API_KEY`). En Authentication activa el acceso anónimo y el de correo con contraseña. En Firestore publica `firestore.rules`.
 
-1. Crea una aplicación web en Firebase.
-2. En Authentication → Sign-in method habilita **Anonymous** para la sincronización automática y **Email/Password** si quieres iniciar sesión manualmente desde Perfil.
-3. Habilita Firestore y Storage.
-4. En Replit, guarda la API key como el secreto `GOOGLE_API_KEY`. Los demás identificadores públicos de este proyecto ya están configurados como variables `VITE_FIREBASE_*`.
-5. Para desarrollo fuera de Replit, copia las variables de `.env.example` a `.env` y completa `VITE_FIREBASE_API_KEY`.
-6. Publica `firestore.rules` y `storage.rules` desde Firebase CLI.
+Las fotos se comprimen y se guardan como datos de la propia app; no hace falta Storage para el flujo actual.
 
-El modelo está preparado para múltiples usuarios: cada documento incluye `userId` y las reglas restringen el acceso al usuario autenticado.
+Para generar y revisar la versión de producción:
 
-## Funcionalidades
+```bash
+npm run build
+npm run preview
+```
 
-- Rutinas CRUD con días, objetivos por ejercicio, búsqueda de librería, ejercicios custom y reordenamiento.
-- Registro rápido de series con peso, repeticiones, estado, referencia de la sesión anterior, PR y timer de descanso con vibración.
-- Métricas de peso corporal, volumen semanal, frecuencia, progresión e historial.
-- Fotos desde cámara/galería, etiqueta, compresión en el cliente y comparación lado a lado.
-- PWA instalable, caché básico offline y navegación responsive.
-- Exportación de datos locales en JSON.
+La vista previa usa el mismo puerto y la misma ruta: [http://localhost:5000/tracker-de-gimnasio/](http://localhost:5000/tracker-de-gimnasio/).
 
-## GitHub Pages
+## Publicación
 
-El workflow `.github/workflows/deploy.yml` construye y publica en cada push a `main`. Configura estos Secrets en GitHub Actions:
+Cada push a `main` ejecuta `.github/workflows/deploy.yml`: instala dependencias, construye el proyecto y lo sube a GitHub Pages. En el repositorio, la fuente de Pages tiene que ser **GitHub Actions**.
 
-`FIREBASE_API_KEY`, `FIREBASE_AUTH_DOMAIN`, `FIREBASE_PROJECT_ID`, `FIREBASE_STORAGE_BUCKET`, `FIREBASE_MESSAGING_SENDER_ID`, `FIREBASE_APP_ID`.
+Estos secrets alimentan la build:
 
-En el repositorio, activa GitHub Pages usando **GitHub Actions** como fuente.
+`FIREBASE_API_KEY`, `FIREBASE_AUTH_DOMAIN`, `FIREBASE_PROJECT_ID`, `FIREBASE_STORAGE_BUCKET`, `FIREBASE_MESSAGING_SENDER_ID` y `FIREBASE_APP_ID`.

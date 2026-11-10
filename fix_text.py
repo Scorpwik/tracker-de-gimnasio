@@ -1,6 +1,6 @@
 from pathlib import Path
 
-p = Path(r"c:\Users\Administrador\Documents\PaginaGimnasio\PaginaGimnasio\src\App.jsx")
+p = Path(r"c:\Users\Administrador\Documents\tracker-de-gimnasio\tracker-de-gimnasio\src\App.jsx")
 text = p.read_text(encoding="utf-8")
 replacements = {
     "Â·": "·",

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-path = Path(r"C:\Users\Administrador\Documents\PaginaGimnasio\PaginaGimnasio\src\App.jsx")
+path = Path(r"C:\Users\Administrador\Documents\tracker-de-gimnasio\tracker-de-gimnasio\src\App.jsx")
 text = path.read_text(encoding="utf-8")
 
 replacements = {

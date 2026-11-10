@@ -1,7 +1,8 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  base: '/PaginaGimnasio/',
+  // GitHub Pages publica el sitio en https://scorpwik.github.io/tracker-de-gimnasio/
+  base: '/tracker-de-gimnasio/',
   define: {
     'import.meta.env.VITE_FIREBASE_API_KEY': JSON.stringify(process.env.GOOGLE_API_KEY || process.env.VITE_FIREBASE_API_KEY || ''),
   },
